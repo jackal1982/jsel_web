@@ -10,14 +10,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     
     <style>
-        /* --- 全域變數定義 (輕奢淑女風配色) --- */
+        /* --- 全域變數 --- */
         :root {
-            --primary-pink: #D8B4B4;   /* 柔和乾燥玫瑰粉 */
-            --accent-gold: #C8A87E;    /* 質感香檳金 */
-            --bg-cream: #FAF8F5;       /* 溫潤奶油米白背景 */
-            --text-dark: #5A4D4D;      /* 深暖灰文字，比純黑更柔和 */
-            --text-light: #887979;     /* 淺暖灰文字 */
+            --primary-pink: #D8B4B4;
+            --accent-gold: #C8A87E;
+            --bg-cream: #FAF8F5;
+            --text-dark: #5A4D4D;
+            --text-light: #887979;
             --white: #ffffff;
+            --nav-height: 70px; /* 電腦版導覽列高度 */
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -26,262 +27,298 @@
             font-family: 'Noto Sans TC', sans-serif;
             background-color: var(--bg-cream);
             color: var(--text-dark);
-            line-height: 1.8;
+            line-height: 1.7;
             overflow-x: hidden;
+            /* 防止手機版底部被導覽列擋住 */
+            padding-bottom: 60px; 
+        }
+
+        @media (min-width: 769px) {
+            body { padding-bottom: 0; }
         }
 
         h1, h2, h3 {
-            font-family: 'Playfair Display', serif; /* 標題使用襯線體 */
-            letter-spacing: 0.08em;
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.05em;
             font-weight: 600;
         }
 
         a { text-decoration: none; color: inherit; transition: all 0.3s ease; }
         img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-        /* --- 通用按鈕樣式 --- */
+        /* --- 按鈕樣式 --- */
         .btn {
             display: inline-block;
-            padding: 12px 35px;
+            padding: 12px 30px;
             border: 1px solid var(--accent-gold);
             color: var(--accent-gold);
             font-family: 'Playfair Display', serif;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             font-size: 0.95rem;
-            background: transparent;
+            background: rgba(255,255,255,0.8);
             cursor: pointer;
-            transition: all 0.4s ease;
+            white-space: nowrap;
         }
         .btn:hover {
             background-color: var(--accent-gold);
             color: var(--white);
-            box-shadow: 0 5px 15px rgba(200, 168, 126, 0.3);
         }
 
-        /* --- Header --- */
+        /* --- Header (電腦版上方) --- */
         header {
-            padding: 15px 5%;
+            padding: 10px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(250, 248, 245, 0.95); /* 微透明奶油色背景 */
+            background: rgba(250, 248, 245, 0.95);
             position: fixed;
             width: 100%;
+            height: var(--nav-height);
             top: 0;
-            z-index: 100;
+            z-index: 1000;
             box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-            border-bottom: 1px solid rgba(200, 168, 126, 0.2);
+            transition: all 0.3s ease;
         }
 
         .header-logo {
-            height: 50px; /* 依實際 Logo 調整高度 */
+            height: 45px;
             width: auto;
         }
 
-        nav ul { display: flex; list-style: none; gap: 40px; }
-        nav a { 
+        /* 電腦版選單 */
+        .desktop-nav ul { display: flex; list-style: none; gap: 30px; }
+        .desktop-nav a { 
             font-size: 0.95rem; 
             color: var(--text-dark); 
             font-weight: 500;
             position: relative;
         }
-        /* 導覽列滑鼠移過效果：金色底線 */
-        nav a::after {
+        .desktop-nav a:hover { color: var(--accent-gold); }
+
+        /* --- Mobile Bottom Nav (手機版底部導覽) --- */
+        .mobile-nav {
+            display: none; /* 電腦版隱藏 */
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            z-index: 1000;
+            padding: 10px 0;
+            border-top: 1px solid var(--accent-gold);
+        }
+        .mobile-nav ul {
+            display: flex;
+            justify-content: space-around;
+            list-style: none;
+        }
+        .mobile-nav a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+        .mobile-nav-icon {
+            font-size: 1.2rem;
+            margin-bottom: 2px;
+            color: var(--accent-gold);
+        }
+
+        /* --- Banner 優化 --- */
+        .banner {
+            /* 預設高度 (電腦) */
+            height: 90vh; 
+            margin-top: var(--nav-height);
+            
+            /* 背景圖設定 */
+            background-image: url('images/banner-bg.jpg');
+            background-size: cover; /* 讓圖片填滿，必定會裁切 */
+            background-position: center center; /* 重點：保持圖片中間顯示 */
+            background-repeat: no-repeat;
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* 增加一層半透明遮罩，確保文字清楚，同時讓背景稍微變暗 */
+        .banner::before {
             content: '';
             position: absolute;
-            bottom: -5px; left: 0; width: 0; height: 1px;
-            background-color: var(--accent-gold);
-            transition: width 0.3s;
-        }
-        nav a:hover { color: var(--accent-gold); }
-        nav a:hover::after { width: 100%; }
-
-        /* --- Banner 區塊 (完全置中) --- */
-        .banner {
-            height: 90vh;
-            margin-top: 80px; /* 避開 fixed header */
-            /* [圖片路徑] Banner 背景圖 */
-            background-image: linear-gradient(rgba(90, 77, 77, 0.2), rgba(90, 77, 77, 0.2)), url('images/banner-bg.jpg');
-            background-size: cover;
-            background-position: center;
-            /* Flexbox 置中設定 */
-            display: flex;
-            justify-content: center; /* 水平置中 */
-            align-items: center;     /* 垂直置中 */
-            padding: 20px;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.15); /* 輕微黑遮罩 */
         }
 
         .banner-box {
-            background: rgba(255, 255, 255, 0.6); /* 半透明白色區塊 */
-            padding: 60px 80px;
-            max-width: 700px;
-            text-align: center; /* 文字內容置中 */
-            box-shadow: 0 15px 40px rgba(0,0,0,0.08);
-            border: 1px solid rgba(200, 168, 126, 0.3); /* 細緻金邊 */
+            position: relative; /* 確保在遮罩之上 */
+            background: rgba(255, 255, 255, 0.85); /* 提高不透明度 */
+            padding: 50px 70px;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid var(--accent-gold);
+            backdrop-filter: blur(5px); /* 毛玻璃特效 (支援的瀏覽器) */
         }
 
         .banner-box h1 {
             font-size: 3rem;
             color: var(--accent-gold);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 0px rgba(255,255,255,0.5);
         }
 
         .banner-box p {
-            font-size: 1.2rem;
-            color: var(--text-light);
-            margin-bottom: 40px;
-            letter-spacing: 1px;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            margin-bottom: 30px;
         }
 
-        /* --- 通用區塊設定 --- */
-        .section { padding: 100px 10%; text-align: center; }
+        /* --- 通用區塊 --- */
+        .section { padding: 80px 10%; text-align: center; }
         
         .section-title {
-            font-size: 2.2rem;
-            margin-bottom: 60px;
+            font-size: 2rem;
+            margin-bottom: 50px;
             color: var(--text-dark);
             position: relative;
             display: inline-block;
         }
-        /* 標題下方的金色裝飾線 */
         .section-title::after {
-            content: ''; display: block; width: 60px; height: 3px;
-            background: var(--accent-gold); margin: 20px auto 0;
-            border-radius: 2px;
+            content: ''; display: block; width: 50px; height: 3px;
+            background: var(--accent-gold); margin: 15px auto 0;
         }
 
-        /* --- 品牌故事 (句點分段) --- */
-        .story-text {
-            max-width: 800px;
-            margin: 0 auto;
-            font-size: 1.15rem;
-            color: var(--text-dark);
-        }
-        .story-line {
-            display: block; /* 強制換行 */
-            margin-bottom: 15px; /* 段落間距 */
-        }
+        /* --- 品牌故事 --- */
+        .story-text { max-width: 800px; margin: 0 auto; font-size: 1.1rem; }
+        .story-line { display: block; margin-bottom: 10px; }
 
-        /* --- 品牌特色 --- */
-        .features-bg { background-color: var(--white); }
-        .features-grid {
+        /* --- 格線系統 (Grid) --- */
+        .features-grid, .products-grid {
             display: grid;
+            gap: 40px;
+            /* 自動適應寬度 */
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 50px;
         }
+
+        /* --- 特色卡片 --- */
         .feature-card { text-align: center; }
-        
         .feature-img-wrapper {
-            height: 300px;
+            height: 280px; /* 統一高度 */
             overflow: hidden;
-            /* 輕奢風：使用柔和的圓角矩形 */
-            border-radius: 50% 50% 0 0 / 30% 30% 0 0; 
-            margin-bottom: 25px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border-radius: 50% 50% 0 0 / 25% 25% 0 0; 
+            margin-bottom: 20px;
             border-bottom: 3px solid var(--accent-gold);
         }
         .feature-img-wrapper img { transition: transform 0.6s ease; }
         .feature-card:hover .feature-img-wrapper img { transform: scale(1.08); }
 
-        .feature-card h3 { 
-            color: var(--accent-gold); 
-            margin-bottom: 15px; font-size: 1.4rem;
-        }
-        .feature-card p { color: var(--text-light); }
-
-        /* --- 精選商品 --- */
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 40px;
-        }
-
+        .feature-card h3 { color: var(--accent-gold); margin-bottom: 10px; }
+        
+        /* --- 產品卡片 --- */
         .product-item {
             background: var(--white);
-            padding-bottom: 25px;
-            transition: all 0.4s ease;
-            border: 1px solid rgba(0,0,0,0.03);
+            border: 1px solid #eee;
+            transition: transform 0.3s;
         }
-        .product-item:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(200, 168, 126, 0.15);
-        }
-
+        .product-item:hover { transform: translateY(-5px); }
+        
         .prod-img-box {
-            height: 350px;
-            overflow: hidden;
             position: relative;
+            width: 100%;
+            padding-top: 100%; /* 強制製作 1:1 正方形容器 */
+            overflow: hidden;
         }
-        /* 標籤樣式優化 */
+        
+        .prod-img-box img {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+
         .tag {
-            position: absolute; top: 15px; right: 15px;
+            position: absolute; top: 10px; right: 10px;
             background: var(--primary-pink); color: #fff;
-            padding: 6px 12px; font-size: 0.85rem;
-            letter-spacing: 1px; font-weight: 500;
-        }
-
-        .prod-info { padding: 25px 20px 10px; text-align: center; }
-        
-        .prod-name {
-            font-size: 1.1rem; margin-bottom: 10px;
-            font-weight: 500; color: var(--text-dark);
-            font-family: 'Noto Sans TC', sans-serif;
+            padding: 5px 10px; font-size: 0.8rem;
+            z-index: 2;
         }
         
-        .prod-price {
-            color: var(--accent-gold);
-            font-weight: 700; font-family: 'Playfair Display', serif;
-            font-size: 1.2rem;
-        }
+        .prod-info { padding: 20px; text-align: center; }
+        .prod-name { margin-bottom: 5px; font-size: 1.05rem; }
+        .prod-price { color: var(--accent-gold); font-weight: 700; font-family: 'Playfair Display'; }
 
-        /* --- Footer & CTA --- */
+        /* --- Footer --- */
         .pinkoi-cta {
-            background-color: var(--primary-pink); /* 使用乾燥玫瑰粉作為底部 CTA 背景 */
-            color: var(--white);
-            padding: 80px 20px;
+            background-color: var(--primary-pink);
+            color: white;
+            padding: 60px 20px;
             text-align: center;
         }
-        .pinkoi-cta h2 { color: var(--white); margin-bottom: 30px; }
+        .btn-white { border-color: white; color: white; background: transparent; }
+        .btn-white:hover { background: white; color: var(--primary-pink); }
         
-        /* 白色按鈕樣式 */
-        .btn-white {
-            border-color: var(--white);
-            color: var(--white);
-        }
-        .btn-white:hover {
-            background-color: var(--white);
-            color: var(--primary-pink);
-        }
-
         footer {
-            background-color: #4A4040; /* 深暖棕色 */
-            color: #B0A0A0;
-            padding: 30px;
-            text-align: center;
-            font-size: 0.85rem;
+            background: #4A4040; color: #aaa; padding: 20px; text-align: center; font-size: 0.8rem;
         }
 
-        /* RWD 響應式調整 */
+        /* =========================================
+           RWD 手機版優化 (寬度小於 768px 時生效)
+           ========================================= */
         @media (max-width: 768px) {
-            header { padding: 15px 20px; }
-            nav { display: none; /* 手機版暫時隱藏選單 */ }
-            .banner-box { padding: 40px 30px; margin: 0 20px; }
-            .banner-box h1 { font-size: 2.2rem; }
-            .section { padding: 80px 5%; }
+            /* 1. Header 調整 */
+            header { 
+                justify-content: center; /* Logo 置中 */
+                height: 60px;
+            }
+            .header-logo { height: 35px; }
+            .desktop-nav { display: none; /* 隱藏電腦版選單 */ }
+            .mobile-nav { display: block; /* 顯示底部導覽 */ }
+
+            /* 2. Banner 手機優化 */
+            .banner {
+                height: 70vh; /* 手機不需要太高，避免滑很久 */
+                margin-top: 60px;
+                background-attachment: scroll; /* 手機不適合 fixed 背景 */
+            }
+            .banner-box {
+                padding: 30px 20px; /* 減少內距 */
+                width: 85%; /* 稍微縮窄 */
+                background: rgba(255, 255, 255, 0.9); /* 手機上文字背景要更不透明，增加易讀性 */
+            }
+            .banner-box h1 { font-size: 2rem; } /* 字體縮小 */
+            .banner-box p { font-size: 1rem; margin-bottom: 20px; }
+
+            /* 3. 區塊間距調整 */
+            .section { padding: 50px 5%; } /* 左右留白減少 */
+            .section-title { font-size: 1.8rem; margin-bottom: 30px; }
+
+            /* 4. 格線調整 */
+            .features-grid, .products-grid {
+                gap: 30px;
+                grid-template-columns: 1fr; /* 強制單欄顯示，圖片更大更清楚 */
+            }
+            
+            /* 5. 產品卡片優化 */
+            .prod-img-box {
+                padding-top: 100%; /* 確保手機上也是正方形 */
+            }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <img src="images/logo.png" alt="JSEL Jessie Elaine Logo" class="header-logo">
-        
-        <nav>
+        <img src="images/logo.png" alt="JSEL Logo" class="header-logo">
+        <nav class="desktop-nav">
             <ul>
                 <li><a href="#about">品牌故事</a></li>
                 <li><a href="#features">設計特色</a></li>
                 <li><a href="#products">本季精選</a></li>
-                <li><a href="https://www.pinkoi.com/store/jessieelaine2021" target="_blank" style="color:var(--accent-gold); font-weight:600;">Pinkoi 商城</a></li>
+                <li><a href="https://www.pinkoi.com/store/jessieelaine2021" target="_blank">Pinkoi 商城</a></li>
             </ul>
         </nav>
     </header>
@@ -304,26 +341,26 @@
         </div>
     </section>
 
-    <section id="features" class="section features-bg">
+    <section id="features" class="section" style="background-color: var(--white);">
         <h2 class="section-title">品牌特色</h2>
         <div class="features-grid">
             <div class="feature-card">
                 <div class="feature-img-wrapper">
-                    <img src="images/feature1.jpg" alt="原創設計展示">
+                    <img src="images/feature1.jpg" alt="原創設計">
                 </div>
                 <h3>原創設計</h3>
                 <p>獨特雙造型與拼接剪裁，展現自我風格。</p>
             </div>
             <div class="feature-card">
                 <div class="feature-img-wrapper">
-                    <img src="images/feature2.jpg" alt="優質工藝展示">
+                    <img src="images/feature2.jpg" alt="優質工藝">
                 </div>
                 <h3>優質工藝</h3>
                 <p>嚴選質感面料與五金，注重每一個細節。</p>
             </div>
             <div class="feature-card">
                 <div class="feature-img-wrapper">
-                    <img src="images/feature3.jpg" alt="平價時尚展示">
+                    <img src="images/feature3.jpg" alt="平價時尚">
                 </div>
                 <h3>平價時尚</h3>
                 <p>高貴不貴的定價，輕鬆擁有的質感生活。</p>
@@ -369,21 +406,49 @@
             </a>
 
         </div>
-        <div style="margin-top:60px;">
-            <a href="https://www.pinkoi.com/store/jessieelaine2021" target="_blank" class="btn">查看所有設計包款</a>
+        <div style="margin-top:50px;">
+            <a href="https://www.pinkoi.com/store/jessieelaine2021" target="_blank" class="btn">查看所有設計</a>
         </div>
     </section>
 
     <div class="pinkoi-cta">
-        <h2>準備好為妳的日常穿搭加分了嗎？</h2>
-        <p style="margin-bottom: 30px; opacity: 0.9;">立即前往 Pinkoi 官方商城，探索更多 JSEL 獨家設計款。</p>
-        <a href="https://www.pinkoi.com/store/jessieelaine2021" target="_blank" class="btn btn-white">前往 Pinkoi 商城選購</a>
+        <h2>打造妳的輕奢穿搭</h2>
+        <p style="margin-bottom: 30px;">立即前往官方商城，探索更多 JSEL 獨家設計。</p>
+        <a href="https://www.pinkoi.com/store/jessieelaine2021" target="_blank" class="btn btn-white">前往 Pinkoi 商城</a>
     </div>
 
     <footer>
-        &copy; 2025 JSEL Jessie Elaine. All Rights Reserved. <br>
-        <span style="opacity: 0.7; margin-top: 10px; display: block;">Design the way you are.</span>
+        &copy; 2025 JSEL Jessie Elaine. All Rights Reserved.
     </footer>
+
+    <nav class="mobile-nav">
+        <ul>
+            <li>
+                <a href="#">
+                    <span class="mobile-nav-icon">⌂</span>
+                    首頁
+                </a>
+            </li>
+            <li>
+                <a href="#about">
+                    <span class="mobile-nav-icon">✎</span>
+                    故事
+                </a>
+            </li>
+            <li>
+                <a href="#products">
+                    <span class="mobile-nav-icon">★</span>
+                    精選
+                </a>
+            </li>
+            <li>
+                <a href="https://www.pinkoi.com/store/jessieelaine2021" target="_blank">
+                    <span class="mobile-nav-icon">🛍</span>
+                    商城
+                </a>
+            </li>
+        </ul>
+    </nav>
 
 </body>
 </html>
